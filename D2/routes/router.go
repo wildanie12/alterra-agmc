@@ -15,5 +15,8 @@ func init() {
 func SetRouter(e *echo.Echo) {
 	book := e.Group("/v1/books")
 	book.GET("", bookController.Index)
-
+	book.POST("", bookController.Store)
+	book.GET("/:bookID", bookController.Show)
+	book.PUT("/:bookID", bookController.Update)
+	book.DELETE("/:bookID", bookController.Delete)
 }
