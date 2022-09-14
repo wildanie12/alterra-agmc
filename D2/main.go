@@ -3,11 +3,11 @@ package main
 import (
 	"agmc_d2/routes"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
-
 
 func main() {
 	err := godotenv.Load()
@@ -18,5 +18,5 @@ func main() {
 	e := echo.New()
 	routes.SetRouter(e)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("APP_PORT")))
 }
