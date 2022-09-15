@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"agmc_d2/models"
+	"agmc_d3/models"
 
 	"github.com/labstack/echo/v4"
 )

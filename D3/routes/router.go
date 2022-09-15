@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"agmc_d2/controllers"
-	"agmc_d2/database"
-	"agmc_d2/lib"
-	"agmc_d2/models"
+	"agmc_d3/controllers"
+	"agmc_d3/database"
+	"agmc_d3/lib"
+	"agmc_d3/models"
 
 	"github.com/labstack/echo/v4"
 )

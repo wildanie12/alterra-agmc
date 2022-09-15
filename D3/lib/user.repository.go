@@ -1,7 +1,7 @@
 package lib
 
 import (
-	"agmc_d2/models"
+	"agmc_d3/models"
 	"errors"
 	"fmt"
 

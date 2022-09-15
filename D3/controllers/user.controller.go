@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"agmc_d2/lib"
-	"agmc_d2/models"
+	"agmc_d3/lib"
+	"agmc_d3/models"
 	"net/http"
 	"strconv"
 
