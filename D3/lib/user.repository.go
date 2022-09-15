@@ -27,6 +27,7 @@ func (ur *UserRepository) FindAll() ([]models.User, error) {
 	return users, nil
 }
 
+
 func (ur *UserRepository) Find(id int) (models.User, error) {
 	user := models.User{}
 	tx := ur.db.Where("id = ?", id).First(&user)

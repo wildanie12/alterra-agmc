@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var authController *controllers.AuthController
 var bookController *controllers.BookController
 var userController *controllers.UserController
 var userRepository *lib.UserRepository
@@ -19,11 +20,15 @@ func init() {
 	db.AutoMigrate(&models.User{})
 	userRepository = lib.NewUserRepository(db)
 
+	authController = controllers.NewAuth(userRepository)
 	bookController = controllers.NewBook()
 	userController = controllers.NewUser(userRepository)
 }
 
 func SetRouter(e *echo.Echo) {
+	auth := e.Group("/v1/auth")
+	auth.POST("/login", authController.Login)
+
 	book := e.Group("/v1/books")
 	book.GET("", bookController.Index)
 	book.POST("", bookController.Store)

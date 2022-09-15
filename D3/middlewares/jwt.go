@@ -10,7 +10,6 @@ import (
 
 const TOKEN = "THIS_IS_S3CR3T:V"
 
-
 func VerifyJWT(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
@@ -43,9 +42,9 @@ func VerifyJWT(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func sendUnauthorizedResponse(c echo.Context, msg string) error {
-	return c.JSON(http.StatusUnauthorized, map[string]interface{} {
-		"status": "error",
-		"code": http.StatusUnauthorized,
-		"message": map[bool]string{ true: msg, false: "Unauthorized user"}[msg != ""],
+	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+		"status":  "error",
+		"code":    http.StatusUnauthorized,
+		"message": map[bool]string{true: msg, false: "Unauthorized user"}[msg != ""],
 	})
 }
