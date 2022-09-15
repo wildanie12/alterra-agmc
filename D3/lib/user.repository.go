@@ -27,6 +27,14 @@ func (ur *UserRepository) FindAll() ([]models.User, error) {
 	return users, nil
 }
 
+func (ur *UserRepository) FindByUsername(username string) (models.User, error) {
+	user := models.User{}
+	tx := ur.db.Where("email = ?", username).First(&user)
+	if tx.Error != nil {
+		return models.User{}, errors.New(fmt.Sprintf("cannot get user detail: %v", tx.Error))
+	}
+	return user, nil
+}
 
 func (ur *UserRepository) Find(id int) (models.User, error) {
 	user := models.User{}

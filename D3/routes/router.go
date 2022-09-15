@@ -4,6 +4,7 @@ import (
 	"agmc_d3/controllers"
 	"agmc_d3/database"
 	"agmc_d3/lib"
+	"agmc_d3/middlewares"
 	"agmc_d3/models"
 
 	"github.com/labstack/echo/v4"
@@ -31,15 +32,15 @@ func SetRouter(e *echo.Echo) {
 
 	book := e.Group("/v1/books")
 	book.GET("", bookController.Index)
-	book.POST("", bookController.Store)
+	book.POST("", bookController.Store, middlewares.VerifyJWT)
 	book.GET("/:bookID", bookController.Show)
-	book.PUT("/:bookID", bookController.Update)
-	book.DELETE("/:bookID", bookController.Delete)
+	book.PUT("/:bookID", bookController.Update, middlewares.VerifyJWT)
+	book.DELETE("/:bookID", bookController.Delete, middlewares.VerifyJWT)
 
 	user := e.Group("/v1/users")
-	user.GET("", userController.Index)
+	user.GET("", userController.Index, middlewares.VerifyJWT)
 	user.POST("", userController.Store)
-	user.GET("/:userID", userController.Show)
-	user.PUT("/:userID", userController.Update)
-	user.DELETE("/:userID", userController.Delete)
+	user.GET("/:userID", userController.Show, middlewares.VerifyJWT)
+	user.PUT("/:userID", userController.Update, middlewares.VerifyJWT)
+	user.DELETE("/:userID", userController.Delete, middlewares.VerifyJWT)
 }

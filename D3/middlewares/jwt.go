@@ -3,12 +3,13 @@ package middlewares
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 )
 
-const TOKEN = "THIS_IS_S3CR3T:V"
+const JWT_SECRET = "THIS_IS_S3CR3T:V"
 
 func VerifyJWT(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -26,7 +27,7 @@ func VerifyJWT(next echo.HandlerFunc) echo.HandlerFunc {
 			if !ok {
 				return nil, fmt.Errorf("unexpected signing method")
 			}
-			return []byte(TOKEN), nil
+			return []byte(JWT_SECRET), nil
 		})
 		if err != nil {
 			return sendUnauthorizedResponse(c, "error parsing token")
@@ -39,6 +40,16 @@ func VerifyJWT(next echo.HandlerFunc) echo.HandlerFunc {
 		c.Set("auth_email", claims["email"])
 		return next(c)
 	}
+}
+
+func CreateToken(username string) (string, error) {
+	claims := jwt.MapClaims{
+		"username": username,
+		"iat": time.Now().Unix(),
+		"eat": time.Now().Add(time.Hour * 72).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(JWT_SECRET))
 }
 
 func sendUnauthorizedResponse(c echo.Context, msg string) error {
