@@ -32,7 +32,7 @@ func (ac *AuthController) Login(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"status":  "error",
-			"code":    http.StatusInternalServerError,
+			"code":    http.StatusBadRequest,
 			"message": "your credentials is invalid",
 			"data":    nil,
 		})
