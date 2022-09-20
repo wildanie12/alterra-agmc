@@ -22,9 +22,11 @@ func init() {
 	db.AutoMigrate(&models.User{})
 	userRepository = repositories.NewUserRepository(db)
 	userService := services.NewUser(userRepository)
+	
+	bookService := services.NewBook()
 
 	authController = controllers.NewAuth(userRepository)
-	bookController = controllers.NewBook()
+	bookController = controllers.NewBook(bookService)
 	userController = controllers.NewUser(userService)
 }
 

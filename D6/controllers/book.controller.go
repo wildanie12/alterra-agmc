@@ -7,43 +7,28 @@ import (
 	"strconv"
 
 	"agmc_d6/models"
+	"agmc_d6/services"
 
 	"github.com/labstack/echo/v4"
 )
 
 type BookController struct {
-	books []models.Book
+	bs *services.BookService
 }
 
-func NewBook() *BookController {
+func NewBook(bs *services.BookService) *BookController {
 	return &BookController{
-		books: []models.Book{
-			{
-				ID:       0,
-				Title:    "Book #1",
-				Author:   "Wawan",
-				Category: "Romance",
-				Year:     "2021",
-				Stock:    228,
-			},
-			{
-				ID:       1,
-				Title:    "Book #2",
-				Author:   "Cahyo",
-				Category: "Action",
-				Year:     "2021",
-				Stock:    337,
-			},
-		},
+		bs: bs,
 	}
 }
 
 func (bc *BookController) Index(c echo.Context) error {
+	books, _ := bc.bs.FindAll()
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "success",
 		"code":    http.StatusOK,
 		"message": "Success getting a list of books",
-		"data":    bc.books,
+		"data":    books,
 	})
 }
 
@@ -56,14 +41,16 @@ func (bc *BookController) Show(c echo.Context) error {
 			"message": "Book ID is invalid",
 		})
 	}
-	if id >= len(bc.books) {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"status":  "error",
-			"code":    http.StatusBadRequest,
-			"message": "Book ID is invalid",
+	
+	book, err := bc.bs.Find(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{} {
+			"status": "error",
+			"code": http.StatusBadGateway,
+			"message": err.Error(),
 		})
 	}
-	book := bc.books[id]
+	
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "success",
 		"code":    http.StatusOK,
@@ -75,10 +62,7 @@ func (bc *BookController) Show(c echo.Context) error {
 func (bc *BookController) Store(c echo.Context) error {
 	book := models.Book{}
 	c.Bind(&book)
-	book.ID = uint(len(bc.books))
-
-	bc.books = append(bc.books, book)
-
+	book, _ = bc.bs.Insert(book)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "success",
 		"code":    http.StatusOK,
@@ -97,14 +81,7 @@ func (bc *BookController) Update(c echo.Context) error {
 			"message": "Book ID is invalid",
 		})
 	}
-	if id >= len(bc.books) {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"status":  "error",
-			"code":    http.StatusBadRequest,
-			"message": "Book ID is invalid",
-		})
-	}
-
+	
 	body, err := ioutil.ReadAll(c.Request().Body)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -116,23 +93,14 @@ func (bc *BookController) Update(c echo.Context) error {
 	bookInput := models.Book{}
 	json.Unmarshal(body, &bookInput)
 
-	book := bc.books[id]
-	if bookInput.Title != "" {
-		book.Title = bookInput.Title
+	book, err := bc.bs.Update(bookInput, id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{} {
+			"status": "error",
+			"code": http.StatusBadGateway,
+			"message": err.Error(),
+		})
 	}
-	if bookInput.Author != "" {
-		book.Author = bookInput.Author
-	}
-	if bookInput.Category != "" {
-		book.Category = bookInput.Category
-	}
-	if bookInput.Year != "" {
-		book.Year = bookInput.Year
-	}
-	if bookInput.Stock != 0 {
-		book.Stock = bookInput.Stock
-	}
-	bc.books[id] = book
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "success",
@@ -152,14 +120,14 @@ func (bc *BookController) Delete(c echo.Context) error {
 			"message": "Book ID is invalid",
 		})
 	}
-	if id >= len(bc.books) {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"status":  "error",
-			"code":    http.StatusBadRequest,
-			"message": "Book ID is invalid",
+	err = bc.bs.Delete(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{} {
+			"status": "error",
+			"code": http.StatusBadGateway,
+			"message": err.Error(),
 		})
 	}
-	bc.books = append(bc.books[:id], bc.books[id+1:]...)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "success",
 		"code":    http.StatusOK,

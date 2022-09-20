@@ -3,6 +3,7 @@ package controllers_test
 import (
 	"agmc_d6/controllers"
 	"agmc_d6/routes"
+	"agmc_d6/services"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -24,7 +25,8 @@ func TestBookIndex(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	
-	bc := controllers.NewBook()
+	bs := services.NewBook()
+	bc := controllers.NewBook(bs)
 	err := bc.Index(c)
 
 	assert.NoError(t, err)
@@ -53,7 +55,8 @@ func TestBookCreate(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	
-	bc := controllers.NewBook()
+	bs := services.NewBook()
+	bc := controllers.NewBook(bs)
 	err := bc.Store(c)
 
 	assert.NoError(t, err)
@@ -65,7 +68,8 @@ func TestBookShow(t *testing.T) {
 	// setup
 	e := echo.New()
 	routes.SetRouter(e)
-	bc := controllers.NewBook()
+	bs := services.NewBook()
+	bc := controllers.NewBook(bs)
 
 	t.Run("invalid format", func(t *testing.T) {		
 		req := httptest.NewRequest(http.MethodPut, "/v1/books", nil)
@@ -141,7 +145,8 @@ func TestBookShow(t *testing.T) {
 func TestBookUpdate(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
-	bc := controllers.NewBook()
+	bs := services.NewBook()
+	bc := controllers.NewBook(bs)
 
 	t.Run("success", func(t *testing.T) {
 
@@ -195,7 +200,8 @@ func TestBookUpdate(t *testing.T) {
 func TestBookDelete(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
-	bc := controllers.NewBook()
+	bs := services.NewBook()
+	bc := controllers.NewBook(bs)
 
 	t.Run("success", func(t *testing.T) {
 
