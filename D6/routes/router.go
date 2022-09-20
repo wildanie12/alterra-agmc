@@ -6,6 +6,7 @@ import (
 	"agmc_d6/middlewares"
 	"agmc_d6/models"
 	"agmc_d6/repositories"
+	"agmc_d6/services"
 
 	"github.com/labstack/echo/v4"
 )
@@ -20,10 +21,11 @@ func init() {
 	db := database.NewMySQL()
 	db.AutoMigrate(&models.User{})
 	userRepository = repositories.NewUserRepository(db)
+	userService := services.NewUser(userRepository)
 
 	authController = controllers.NewAuth(userRepository)
 	bookController = controllers.NewBook()
-	userController = controllers.NewUser(userRepository)
+	userController = controllers.NewUser(userService)
 }
 
 func SetRouter(e *echo.Echo) {

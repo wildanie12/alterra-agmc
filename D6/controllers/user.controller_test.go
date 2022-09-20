@@ -5,6 +5,7 @@ import (
 	"agmc_d6/database"
 	"agmc_d6/repositories"
 	"agmc_d6/routes"
+	"agmc_d6/services"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -19,17 +20,20 @@ import (
 
 var db *gorm.DB
 var ur *repositories.UserRepository
+var us *services.UserService
+
 func init() {
 	godotenv.Load("../.env")
 	db = database.NewMySQL()
 	ur = repositories.NewUserRepository(db)
+	us = services.NewUser(ur)
 }
 
 func TestUserIndex(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
 
-	uc := controllers.NewUser(ur)
+	uc := controllers.NewUser(us)
 	t.Run("success", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/v1/users", nil)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -44,7 +48,7 @@ func TestUserIndex(t *testing.T) {
 func TestUserStore(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
-	uc := controllers.NewUser(ur)
+	uc := controllers.NewUser(us)
 
 	t.Run("success", func(t *testing.T) {
 		body := map[string]string {
@@ -68,7 +72,7 @@ func TestUserStore(t *testing.T) {
 func TestUserShow(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
-	uc := controllers.NewUser(ur)
+	uc := controllers.NewUser(us)
 
 	t.Run("success", func(t *testing.T) {
 		body := map[string]string {
@@ -117,7 +121,7 @@ func TestUserShow(t *testing.T) {
 func TestUserUpdate(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
-	uc := controllers.NewUser(ur)
+	uc := controllers.NewUser(us)
 
 	t.Run("success", func(t *testing.T) {
 		body := map[string]string {
@@ -167,7 +171,7 @@ func TestUserUpdate(t *testing.T) {
 func TestUserDelete(t *testing.T) {
 	e := echo.New()
 	routes.SetRouter(e)
-	uc := controllers.NewUser(ur)
+	uc := controllers.NewUser(us)
 
 	t.Run("success", func(t *testing.T) {
 		body := map[string]string {

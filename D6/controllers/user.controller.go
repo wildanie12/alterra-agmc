@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"agmc_d6/models"
-	"agmc_d6/repositories"
+	"agmc_d6/services"
 	"net/http"
 	"strconv"
 
@@ -10,17 +10,17 @@ import (
 )
 
 type UserController struct {
-	repo *repositories.UserRepository
+	us *services.UserService
 }
 
-func NewUser(repo *repositories.UserRepository) *UserController {
+func NewUser(us *services.UserService) *UserController {
 	return &UserController{
-		repo: repo,
+		us: us,
 	}
 }
 
 func (uc *UserController) Index(c echo.Context) error {
-	users, err := uc.repo.FindAll()
+	users, err := uc.us.FindAll()
 	if err != nil {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"status":  "error",
@@ -48,7 +48,7 @@ func (uc *UserController) Show(c echo.Context) error {
 		})
 	}
 
-	user, err := uc.repo.Find(id)
+	user, err := uc.us.Find(id)
 	if err != nil {
 		code := http.StatusInternalServerError
 		if err.Error() == "cannot get user detail: record not found" {
@@ -74,7 +74,7 @@ func (uc *UserController) Store(c echo.Context) error {
 	user := models.User{}
 	c.Bind(&user)
 
-	user, err := uc.repo.Create(user)
+	user, err := uc.us.Insert(user)
 	if err != nil {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"status":  "error",
@@ -106,7 +106,7 @@ func (uc *UserController) Update(c echo.Context) error {
 		})
 	}
 
-	user, err = uc.repo.Update(user, id)
+	user, err = uc.us.Update(id, user)
 	if err != nil {
 		code := http.StatusInternalServerError
 		if err.Error() == "cannot get user detail: record not found" {
@@ -142,7 +142,7 @@ func (uc *UserController) Delete(c echo.Context) error {
 		})
 	}
 
-	err = uc.repo.Delete(id)
+	err = uc.us.Delete(id)
 	if err != nil {
 		code := http.StatusInternalServerError
 		if err.Error() == "cannot get user detail: record not found" {
