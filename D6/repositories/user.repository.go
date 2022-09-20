@@ -1,7 +1,7 @@
-package lib
+package repositories
 
 import (
-	"agmc_d4/models"
+	"agmc_d6/models"
 	"errors"
 	"fmt"
 

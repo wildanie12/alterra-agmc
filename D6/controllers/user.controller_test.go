@@ -1,10 +1,10 @@
 package controllers_test
 
 import (
-	"agmc_d4/controllers"
-	"agmc_d4/database"
-	"agmc_d4/lib"
-	"agmc_d4/routes"
+	"agmc_d6/controllers"
+	"agmc_d6/database"
+	"agmc_d6/repositories"
+	"agmc_d6/routes"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -18,11 +18,11 @@ import (
 )
 
 var db *gorm.DB
-var ur *lib.UserRepository
+var ur *repositories.UserRepository
 func init() {
 	godotenv.Load("../.env")
 	db = database.NewMySQL()
-	ur = lib.NewUserRepository(db)
+	ur = repositories.NewUserRepository(db)
 }
 
 func TestUserIndex(t *testing.T) {

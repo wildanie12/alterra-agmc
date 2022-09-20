@@ -1,4 +1,4 @@
-module agmc_d4
+module agmc_d6
 
 go 1.18
 

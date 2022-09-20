@@ -1,7 +1,7 @@
 package main
 
 import (
-	"agmc_d4/routes"
+	"agmc_d6/routes"
 	"log"
 	"os"
 

@@ -1,10 +1,10 @@
 package controllers_test
 
 import (
-	"agmc_d4/controllers"
-	"agmc_d4/database"
-	"agmc_d4/lib"
-	"agmc_d4/models"
+	"agmc_d6/controllers"
+	"agmc_d6/database"
+	"agmc_d6/models"
+	"agmc_d6/repositories"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -33,7 +33,7 @@ func TestLogin(t *testing.T) {
 	// setup
 	e := echo.New()
 	db := database.NewMySQL()
-	userRepo := lib.NewUserRepository(db)
+	userRepo := repositories.NewUserRepository(db)
 
 	_, err := userRepo.FindByUsername(sampleUser["email"].(string))
 	if err != nil {

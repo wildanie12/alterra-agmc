@@ -1,19 +1,19 @@
 package controllers
 
 import (
-	"agmc_d4/lib"
-	"agmc_d4/middlewares"
+	"agmc_d6/middlewares"
+	"agmc_d6/repositories"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 type AuthController struct {
-	userRepo *lib.UserRepository
+	userRepo *repositories.UserRepository
 }
 
 // NewAuth return instance of AuthController.
-func NewAuth(repo *lib.UserRepository) *AuthController {
+func NewAuth(repo *repositories.UserRepository) *AuthController {
 	return &AuthController{
 		userRepo: repo,
 	}

@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"agmc_d4/lib"
-	"agmc_d4/models"
+	"agmc_d6/models"
+	"agmc_d6/repositories"
 	"net/http"
 	"strconv"
 
@@ -10,10 +10,10 @@ import (
 )
 
 type UserController struct {
-	repo *lib.UserRepository
+	repo *repositories.UserRepository
 }
 
-func NewUser(repo *lib.UserRepository) *UserController {
+func NewUser(repo *repositories.UserRepository) *UserController {
 	return &UserController{
 		repo: repo,
 	}

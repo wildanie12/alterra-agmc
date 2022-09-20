@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"agmc_d4/controllers"
-	"agmc_d4/database"
-	"agmc_d4/lib"
-	"agmc_d4/middlewares"
-	"agmc_d4/models"
+	"agmc_d6/controllers"
+	"agmc_d6/database"
+	"agmc_d6/middlewares"
+	"agmc_d6/models"
+	"agmc_d6/repositories"
 
 	"github.com/labstack/echo/v4"
 )
@@ -13,13 +13,13 @@ import (
 var authController *controllers.AuthController
 var bookController *controllers.BookController
 var userController *controllers.UserController
-var userRepository *lib.UserRepository
+var userRepository *repositories.UserRepository
 
 func init() {
 
 	db := database.NewMySQL()
 	db.AutoMigrate(&models.User{})
-	userRepository = lib.NewUserRepository(db)
+	userRepository = repositories.NewUserRepository(db)
 
 	authController = controllers.NewAuth(userRepository)
 	bookController = controllers.NewBook()

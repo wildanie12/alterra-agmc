@@ -1,8 +1,8 @@
 package controllers_test
 
 import (
-	"agmc_d4/controllers"
-	"agmc_d4/routes"
+	"agmc_d6/controllers"
+	"agmc_d6/routes"
 	"bytes"
 	"encoding/json"
 	"fmt"
